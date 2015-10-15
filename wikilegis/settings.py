@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -40,6 +43,9 @@ INSTALLED_APPS = (
     'wikilegis.core',
     'wikilegis.helpers',
     'wikilegis.comments2',
+    'flat',
+    'object_tools',
+    'export',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,6 +65,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'rules.apps.AutodiscoverRulesConfig',
     'embed_video',
+    'social.apps.django_app.default',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -71,6 +78,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'wikilegis.urls'
@@ -85,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -122,6 +132,9 @@ HAYSTACK_CONNECTIONS = {
 AUTH_USER_MODEL = 'auth2.User'
 
 AUTHENTICATION_BACKENDS = (
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.twitter.TwitterOAuth',
+    'social.backends.facebook.Facebook2OAuth2',
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -150,7 +163,60 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = 587
 
-# django.contrib.sites: https://docs.djangoproject.com/en/1.8/ref/contrib/sites/
+# python-social-auth: http://psa.matiasaguirre.net/docs/index.html
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
+)
+
+# We just want the *social user*'s email. Not the username.
+# This is used by `social.pipeline.user.create_user` to create the user.
+# Since our user has no username, we have to remove it from the list.
+USER_FIELDS = ('email',)
+
+
+# Fill these with your application credentials in order to use social logins.
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+
+SOCIAL_AUTH_FACEBOOK_KEY = ''
+SOCIAL_AUTH_FACEBOOK_SECRET = ''
+
+SOCIAL_AUTH_TWITTER_KEY = ''
+SOCIAL_AUTH_TWITTER_SECRET = ''
+
+
+# Information about available social backends. I know this is not the
+# best place to put this kind of things, but what could one do?
+
+SOCIAL_BACKEND_INFO = {
+    'google-oauth2': {
+        'title': _('Google'),
+        'icon': 'img/sa-google-icon.png',
+    },
+    'facebook': {
+        'title': _('Facebook'),
+        'icon': 'img/sa-facebook-icon.png',
+    },
+    'twitter': {
+        'title': _('Twitter'),
+        'icon': 'img/sa-twitter-icon.png',
+    }
+}
+
+
+# Site-specific settings
 
 SITE_ID = 1
 
@@ -158,7 +224,15 @@ SITE_ID = 1
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = os.environ.get('DJANGO_LANGUAGE_CODE', 'en')
+languages = dict(default.LANGUAGES)
+language_tuple = lambda language_code: (language_code, languages[language_code])
+
+LANGUAGES = (
+    language_tuple('en'),
+    language_tuple('pt-br'),
+)
+
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = os.environ.get('TZ', 'UTC')
 
@@ -229,3 +303,6 @@ LOGGING = {
 }
 
 
+SERIALIZATION_MODULES = {
+    'csv': 'export.serializers.csv_serializer'
+}
