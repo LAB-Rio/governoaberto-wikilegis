@@ -1,14 +1,9 @@
 {% extends "bill/_base.html" %}
 
 {% load static %}
-{% load helpers %}
 {% load i18n %}
+{% load render_materialized_field from wl_forms %}
 
-
-{% comment TODO by dirleyrls %}{#
-    1. Definir o foco inicial pro campo `content`.
-    3. Exibir um "campo" que permita ao usuário exibir/esconder o conteúdo original.
-#}{% endcomment %}
 
 {% block content3 %}
     <div class="col m8 pl-full">
@@ -20,28 +15,28 @@
 
                 {{ form.non_field_errors }}
 
-                <textarea hidden="hidden" id="id_content" name="content" onblur="segment_compare()"></textarea>
-
                 <div class="row propose">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">mode_edit</i>
-                        <textarea class="materialize-textarea" cols="40" id="content-input" name="content-input" onblur="segment_compare()" rows="10" style="height: 22px;">{{ form.initial.content }}</textarea>
+                        {% render_materialized_field form.content extra_classes="materialize-textarea" data_original_content=form.initial.content|escape %}
                     </div>
                 </div>
 
-                <div class="row propose">
-                    <div class="input-field col s12">
-                        <p id="content-output"></p>
+                <div class="row" id="preview">
+                    <div class="input-field col s11 offset-s1">
+                        <div id="preview-content">{{ form.initial.content|linebreaksbr }}</div>
                     </div>
                 </div>
+
+                <br /><p></p>
 
                 <div class="row">
-                  <div class="col s11 offset-s1">
-                    <div class="input-field col s12">
-                        <i class="material-icons prefix">comment</i>
-                        {% call "core:render_field" form.comment extra_classes="materialize-textarea" %}
+                    <div class="col s11 offset-s1">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">comment</i>
+                            {% render_materialized_field form.comment extra_classes="materialize-textarea" %}
+                        </div>
                     </div>
-                  </div>
                 </div>
 
                 <div class="row">
@@ -59,60 +54,23 @@
 {% endblock %}
 
 {% block partialscript %}
-    <script type="text/javascript" src="{% static "js/jsdiff.js" %}"></script>
-    <script>
+    <script type="text/javascript" src="{% static "js/diff.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/lodash.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/wikilegis.js" %}"></script>
+    <script type="text/javascript">
         $(function() {
-          $('textarea#content-input').focus();
+            function refreshPreview(e) {
+                var $ta = $(e.target);
+                var current = $ta.val();
+                var original = $ta.attr('data-original-content');
+                var changes = wlDiff(original, current);
+                $('#preview-content').html(changesToMarkup(changes));
+            }
+
+            $("#{{ form.content.id_for_label }}")
+                    // TODO Deal with paste events.
+                    .on('focus change keyup propertychange', _.debounce(refreshPreview, 100))
+                    .focus();
         });
-    </script>
-    <script>
-        function segment_compare()
-        {
-            document.getElementById("content-output").innerHTML="";
-            var str_input="{{ form.initial.content|escapejs }}";
-            var str_output=document.getElementById("content-input").value;
-
-            var splitinput = str_input.split("\n");
-            var splitoutput = str_output.split("\n");
-
-            var inlines=splitinput.length;
-            var outlines=splitoutput.length;
-
-            var lines;
-            if (outlines>inlines)
-            {
-                lines=outlines;
-            }
-            else
-            {
-                lines=inlines;
-            }
-
-            var buildoutput="";
-
-            for (i=0;i<lines;i++)
-            {
-                var testundefined=false;
-                if (splitinput[i]==undefined)
-                {
-                    buildoutput=buildoutput+diffString("",splitoutput[i]);
-                    testundefined=true;
-                }
-
-                if (splitoutput[i]==undefined)
-                {
-                    buildoutput=buildoutput+diffString(splitinput[i],"");
-                    testundefined=true;
-                }
-
-                if (testundefined==false)
-                {
-                    buildoutput=buildoutput+diffString(splitinput[i],splitoutput[i]);
-                }
-            }
-
-            document.getElementById("content-output").innerHTML = buildoutput;
-            $("#id_content").text(buildoutput);
-        }
     </script>
 {% endblock %}

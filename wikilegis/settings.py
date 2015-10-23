@@ -41,7 +41,6 @@ ALLOWED_HOSTS = confutils.environ_to_list_of_strings(os.environ.get('ALLOWED_HOS
 INSTALLED_APPS = (
     'wikilegis.auth2',
     'wikilegis.core',
-    'wikilegis.helpers',
     'wikilegis.comments2',
     'flat',
     'object_tools',
