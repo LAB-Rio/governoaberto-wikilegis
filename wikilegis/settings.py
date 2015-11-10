@@ -118,7 +118,8 @@ try:
 except ImportError:
     pass
 else:
-    DATABASES['default']['ENGINE'] = 'django_postgrespool'
+    if config('USE_POSTGRESPOOL', default=True, cast=bool):
+        DATABASES['default']['ENGINE'] = 'django_postgrespool'
 
 
 # django-haystack: http://django-haystack.readthedocs.org/
