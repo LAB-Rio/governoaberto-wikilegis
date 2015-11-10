@@ -14,6 +14,7 @@ from __future__ import unicode_literals
 
 import os
 import django.conf.global_settings as default
+from decouple import config
 
 from decouple import config, Csv
 from dj_database_url import parse as db_url
@@ -41,6 +42,7 @@ INSTALLED_APPS = (
     'wikilegis.auth2',
     'wikilegis.core',
     'wikilegis.comments2',
+    'wikilegis.notification',
     'flat',
     'object_tools',
     'export',
@@ -64,6 +66,8 @@ INSTALLED_APPS = (
     'rules.apps.AutodiscoverRulesConfig',
     'embed_video',
     'social.apps.django_app.default',
+    'easy_thumbnails',
+    'image_cropping',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -84,7 +88,7 @@ ROOT_URLCONF = 'wikilegis.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'wikilegis', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -245,10 +249,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public'))
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public', 'static'))
 
 
 # django-compressor: http://django-compressor.readthedocs.org/
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'wikilegis', 'static'),
+)
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
@@ -266,6 +274,11 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 # django-debug-toolbar: http://django-debug-toolbar.readthedocs.org/
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public', 'media'))
+
+## Debug toolbar
 STATIC_IPS = ('127.0.0.1', '::1', )
 
 
@@ -303,3 +316,15 @@ LOGGING = {
 SERIALIZATION_MODULES = {
     'csv': 'export.serializers.csv_serializer'
 }
+
+from easy_thumbnails.conf import Settings as thumbnail_settings
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
+
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_PWD')
+EMAIL_SUBJECT_PREFIX = config('EMAIL_SUBJECT_PREFIX')
+EMAIL_USE_TLS = config('EMAIL_TLS', cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', cast=int)

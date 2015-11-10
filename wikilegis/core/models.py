@@ -12,6 +12,13 @@ from django.core.urlresolvers import reverse
 from django_extensions.db.fields.json import JSONField
 
 
+BILL_STATUS_CHOICES = (
+    ('draft', _('Draft')),
+    ('published', _('Published')),
+    ('closed', _('Closed'))
+)
+
+
 def model_repr(cls, **kwargs):
     values = kwargs.items()
     values = ((force_text(k), Truncator(force_text(v)).chars(50)) for (k, v) in values)
@@ -44,6 +51,7 @@ class GenericData(models.Model):
 class Bill(TimestampedMixin):
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'))
+    status = models.CharField(_('status'), max_length=20, choices=BILL_STATUS_CHOICES, default='1')
 
     editors = models.ManyToManyField(
         'auth.Group', verbose_name=_('editors'), blank=True,
@@ -120,25 +128,49 @@ class CitizenAmendment(TimestampedMixin):
         return 'show_amendment', [self.pk]
 
 
-class UserSegmentChoice(models.Model):
-    """
-    Each instance of this model indicates a choice of a user for a version of a bill segment.
-
-    Users can choose either a submitted CitizenAmendment or they can choose the original segment text.
-
-    Thus, there should be only one instance of this model for each pair of (user, segment).
-
-    If there is none, the user hasn't voted for that particular segment yet.
-
-    If there is one, but it's amendment if None, it means the user has voted for the original segment text.
-
-    Otherwise, the user has voted for the selected amendment.
-    """
+class UpDownVote(TimestampedMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('user'))
-    segment = models.ForeignKey('core.BillSegment', related_name='choices',
-                                verbose_name=_('bill segment'))
-    amendment = models.ForeignKey('core.CitizenAmendment', related_name='choosings',
-                                  null=True, blank=True, verbose_name=_('amendment'))
+    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey('contenttypes.ContentType')
+    content_object = GenericForeignKey('content_type', 'object_id')
+    vote = models.BooleanField(choices=((True, _('Up Vote')), (False, _('Down Vote'))))
 
     class Meta:
-        unique_together = ('user', 'segment')
+        unique_together = ('user', 'object_id', 'content_type')
+
+    def __unicode__(self):
+        return self.user
+
+
+class Proposition(models.Model):
+    bill = models.ForeignKey('core.Bill', verbose_name=_('bill'))
+    type = models.CharField(_('type'), max_length=200, null=True, blank=True)
+    number = models.CharField(_('number'), max_length=50, null=True, blank=True)
+    year = models.CharField(_('year'), max_length=4, null=True, blank=True)
+    name_proposition = models.CharField(_('name proposition'), max_length=200, null=True, blank=True)
+    id_proposition = models.IntegerField(_('id proposition'), null=True, blank=True)
+    id_main_proposition = models.IntegerField(_('id main proposition'), null=True, blank=True)
+    name_origin_proposition = models.CharField(_('name origin proposition'), max_length=200, null=True, blank=True)
+    theme = models.CharField(_('theme'), max_length=200, null=True, blank=True)
+    menu = models.TextField(_('menu'), null=True, blank=True)
+    menu_explanation = models.TextField(_('menu_explanation'), null=True, blank=True)
+    author = models.CharField(_('author'), max_length=200, null=True, blank=True)
+    id_register = models.CharField(_('id register'), max_length=200, null=True, blank=True)
+    uf_author = models.CharField(_('uf author'), max_length=200, null=True, blank=True)
+    party_author = models.CharField(_('party author'), max_length=200, null=True, blank=True)
+    apresentation_date = models.DateField(_('apresentation date'), null=True, blank=True)
+    processing_regime = models.CharField(_('processing_regime'), max_length=200, null=True, blank=True)
+    last_dispatch_date = models.DateField(_('last dispatch date'), null=True, blank=True)
+    last_dispatch = models.TextField(_('last dispatch'), null=True, blank=True)
+    appraisal = models.CharField(_('appraisal'), max_length=200, null=True, blank=True)
+    indexing = models.CharField(_('indexing'), max_length=200, null=True, blank=True)
+    situation = models.CharField(_('situation'), max_length=200, null=True, blank=True)
+    content_link = models.URLField(_('content link'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('proposition')
+        verbose_name_plural = _('propositions')
+
+    def __unicode__(self):
+        return self.number
+

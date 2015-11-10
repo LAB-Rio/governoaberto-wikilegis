@@ -1,0 +1,69 @@
+{% extends "base_with_sidebar.html" %}
+
+{% load static humanize i18n %}
+{% load video from embed_video_tags %}
+{% load cropping %}
+
+{% block content2 %}
+    {% comment %}TODO Remove these funny scroll sheningans{% endcomment %}
+    <div class="col m3 pl-full pl-description nice-scroll">
+
+        <a href="{% url "show_bill" bill.id %}">
+            <div class="circle"><div class="pl-icon"><i class="medium material-icons">description</i></div></div>
+            <h5 class="pl-title">{{ bill.title }}</h5>
+        </a>
+
+        <p class="pl-about">
+            {% if bill.proposition_set.all.0.id_proposition  %}
+            <a target="_blank" href="http://www2.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao={{ bill.proposition_set.all.0.id_proposition }}">{{ bill.description|safe|linebreaks }}</a>
+            {% else %}
+            {{ bill.description|safe|linebreaks }}
+            {% endif %}
+        </p>
+        {% if bill.proposition_set.all.0.situation %}
+        <p class="pl-about">Situação: {{ bill.proposition_set.all.0.situation }}</p>
+        {% endif %}
+        {% if bill.proposition_set.all.0.id_register %}
+            <p>Autor:</p>
+            <a target="_blank" href="http://www.camara.leg.br/Internet/Deputado/dep_Detalhe.asp?id={{ bill.proposition_set.all.0.id_register }}">
+            <div class="pl-author" style="margin-left: 0">
+                <div class="avatar" style="background-image: url('http://www.camara.gov.br/internet/deputado/bandep/{{ bill.proposition_set.all.0.id_register }}.jpg')"></div>
+                <div class="info">
+                    <span class="author">
+                    {{ bill.proposition_set.all.0.author }} ({{ bill.proposition_set.all.0.party_author }}-{{ bill.proposition_set.all.0.uf_author }})
+                    </span>
+                </div>
+            </div>
+            </a>
+        {% endif %}
+
+        {% for author in authors %}
+            <div class="pl-author">
+            
+                {% if author.user.avatar %}
+                    <div class="avatar" style="background-image: url('{% cropped_thumbnail author.user 'cropping' %}')"></div>
+                {% else %}
+                    <div class="avatar" style="background-image: url('{% static "img/user.png" %}')"></div>
+                {% endif %}
+
+                <div class="info">
+                    <span class="author"><a href="{% url 'users_profile' author.user.pk %}">{{ author.user }}</a></span>
+                </div>
+            </div>
+            {% if not forloop.last %}<hr />{% endif %}
+        {% endfor %}
+
+        {% for item in  videos %}
+            <div class="pl-about video-descripition">
+                {% video item.url %}
+            </div>
+            {% if not forloop.last %}<hr />{% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="col m7 pl-full list-amendment">
+        {% for segment in bill.segments.all %}
+            {% include "bill/_bill_segment_item.html" %}
+        {% endfor %}
+    </div>
+{% endblock %}

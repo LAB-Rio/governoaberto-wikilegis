@@ -26,3 +26,6 @@ rules==0.4
 six==1.9.0
 sqlparse==0.1.16
 whitenoise==2.0.3
+Pillow==3.0.0
+easy-thumbnails==2.2
+django-image-cropping==1.0.2
