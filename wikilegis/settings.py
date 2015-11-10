@@ -321,10 +321,3 @@ from easy_thumbnails.conf import Settings as thumbnail_settings
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
-
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_PWD')
-EMAIL_SUBJECT_PREFIX = config('EMAIL_SUBJECT_PREFIX')
-EMAIL_USE_TLS = config('EMAIL_TLS', cast=bool)
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
