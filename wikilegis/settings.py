@@ -11,29 +11,28 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 from __future__ import unicode_literals
+
+import os
+import django.conf.global_settings as default
+
+from decouple import config, Csv
+from dj_database_url import parse as db_url
 from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Import `default` as the default settings. This can be handy while pushing items into tuples.
-import django.conf.global_settings as default
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-from wikilegis import confutils
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'g8#!8*0sr!zsg!q=on=n66dtie69u0z1qhfk-&c8bc_%t#&g@%')
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='g8#!8*0sr!zsg!q=on=n66dtie69u0z1qhfk-&c8bc_%t#&g@%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = confutils.environ_to_boolean(os.environ.get('DEBUG'))
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = confutils.environ_to_list_of_strings(os.environ.get('ALLOWED_HOSTS'))
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(lambda x: x.strip().strip(',').strip()), default='127.0.0.1')
 
 
 # Application definition
@@ -106,8 +105,9 @@ WSGI_APPLICATION = 'wikilegis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-import dj_database_url
-DATABASES = dict(default=dj_database_url.config())
+DATABASES = dict(default=config('DATABASE_URL',
+                                cast=db_url,
+                                default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')))
 
 try:
     import django_postgrespool
@@ -155,11 +155,11 @@ LOGIN_REDIRECT_URL = '/'
 
 # Use GMail SMTP to send mail.
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-EMAIL_PORT = 587
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
 
 # python-social-auth: http://psa.matiasaguirre.net/docs/index.html
 
@@ -185,11 +185,11 @@ USER_FIELDS = ('email',)
 
 # Fill these with your application credentials in order to use social logins.
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', '')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', '')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', default='')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', default='')
 
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY', '')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET', '')
+SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY', default='')
+SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET', default='')
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
@@ -254,7 +254,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
-COMPRESS_OFFLINE = confutils.environ_to_boolean(os.environ.get('COMPRESS_OFFLINE')) or not DEBUG
+COMPRESS_OFFLINE = config('COMPRESS_OFFLINE', default=(not DEBUG))
 
 STATICFILES_FINDERS = default.STATICFILES_FINDERS + (
     'compressor.finders.CompressorFinder',

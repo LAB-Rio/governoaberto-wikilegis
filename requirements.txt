@@ -19,6 +19,7 @@ django-registration-redux==1.2
 futures==3.0.3
 gunicorn==19.3.0
 libsass==0.8.3
+python-decouple==3.0
 python-social-auth==0.2.13
 pytz==2015.6
 rules==0.4
