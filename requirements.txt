@@ -8,7 +8,6 @@ django-appconf==1.0.1
 django-compressor==1.5
 django-contrib-comments==1.6.1
 django-debug-toolbar==1.3.2
-django-decouple==2.1
 django-embed-video==1.0.0
 django-export==1.0.4
 django-extensions==1.5.7
