@@ -263,7 +263,9 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
-COMPRESS_OFFLINE = config('COMPRESS_OFFLINE', default=(not DEBUG))
+COMPRESS_ENABLED = config('COMPRESS_ENABLED', default=True)
+
+COMPRESS_OFFLINE = config('COMPRESS_OFFLINE', default=(COMPRESS_ENABLED and not DEBUG))
 
 STATICFILES_FINDERS = default.STATICFILES_FINDERS + (
     'compressor.finders.CompressorFinder',
