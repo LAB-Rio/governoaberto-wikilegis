@@ -28,37 +28,77 @@ function changesToMarkup(changes) {
 jQuery(document).ready(function ($) {
 
     //navbar	
-    
+
     var is_root = location.pathname == "/";
-    
+
     if (is_root) {
 
-        if ($(window).scrollTop() >= $(window).height())
+        if ($(window).scrollTop() >= ($(window).height() - $('.wiki-navbar').height()))
             $('.wiki-navbar').addClass('fixed-top');
 
         $(window).scroll(function () {
-            if ($(this).scrollTop() >= $(window).height()) {
+            if ($(this).scrollTop() >= ($(window).height() - $('.wiki-navbar').height())) {
                 if (!$('.wiki-navbar').hasClass('fixed-top'))
                     $('.wiki-navbar').hide().addClass('fixed-top').fadeIn(200);
             } else {
-                if ($('.wiki-navbar').hasClass('fixed-top')) 
+                if ($('.wiki-navbar').hasClass('fixed-top'))
                     $('.wiki-navbar').removeClass('fixed-top');
             }
         });
-        
+
     } else {
         $('.wiki-navbar').addClass('fixed-top')
     }
+
+    //mob-nav
+
+    $('#open-menu').click(function (e) {
+        e.preventDefault();
+        var is_opened = $('.wiki-navbar').hasClass('opened');
+
+        if (!is_opened) {
+            open();
+        } else {
+            close();             
+        }
+        
+        $('#overlay').click(function() {
+            close(); 
+        });
+        
+    });
     
+    function open() {
+        $(document.body).append('<div id="overlay"></div>');
+        $('.wiki-navbar').addClass('opened');
+        $('.wiki-navbar').css('background-color', '#324545');
+        $('.wiki-navbar').css('box-shadow', '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)');                   
+        $('#menu-button').html('close');
+        $('.wiki-navbar').css('height', 'auto');
+        $('.opened-menu').removeClass('hide');
+    }
+    
+    function close() {
+        $('#overlay').remove();
+        $('.wiki-navbar').removeClass('opened');
+        $('.wiki-navbar').css('box-shadow','');
+        $('.wiki-navbar').css('background-color', '');
+        $('#menu-button').html('menu');
+        $('.wiki-navbar').css('height', '');
+        $('.opened-menu').addClass('hide');
+    }
+    
+    
+
     //See projects
-    
-    $(".see-projects").click(function() {
+
+    $(".see-projects").click(function () {
         $('html, body').animate({
             scrollTop: $("#projects").offset().top
         }, 1000, 'easeOutCirc');
-    });    
-    
-    
+    });
+
+
 
     // Collapsable-comments
     $('.collapsible-comments').attr('data-show', function (event, qtd_to_show) {
