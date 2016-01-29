@@ -114,14 +114,6 @@ DATABASES = dict(default=config('DATABASE_URL',
                                 cast=db_url,
                                 default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')))
 
-try:
-    import django_postgrespool
-except ImportError:
-    pass
-else:
-    if config('USE_POSTGRESPOOL', default=True, cast=bool):
-        DATABASES['default']['ENGINE'] = 'django_postgrespool'
-
 
 # django-haystack: http://django-haystack.readthedocs.org/
 HAYSTACK_CONNECTIONS = {
@@ -150,7 +142,8 @@ AUTHENTICATION_BACKENDS = (
 
 # If `False` the registration view will not require user activation through e-mail.
 # Useful to disable activation during DEBUG or other situations where mails can't be sent.
-ACCOUNT_ACTIVATION_REQUIRED = not DEBUG
+
+ACCOUNT_ACTIVATION_REQUIRED = config('ACCOUNT_ACTIVATION_REQUIRED', cast=bool, default=(not DEBUG))
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -159,6 +152,7 @@ REGISTRATION_AUTO_LOGIN = True
 REGISTRATION_FORM = 'wikilegis.auth2.forms.RegistrationForm'
 
 # XXX Please don't change. The URL is included in `wikilegis.auth2.urls`.
+
 INCLUDE_REGISTER_URL = False
 
 LOGIN_REDIRECT_URL = '/'
@@ -226,7 +220,7 @@ SOCIAL_BACKEND_INFO = {
 
 # Site-specific settings
 
-SITE_ID = 1
+SITE_ID = config('SITE_ID', cast=int, default=1)
 
 
 # Internationalization
@@ -288,6 +282,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public', 'media'))
 
 ## Debug toolbar
+
 STATIC_IPS = ('127.0.0.1', '::1', )
 
 
@@ -327,6 +322,7 @@ SERIALIZATION_MODULES = {
 }
 
 from easy_thumbnails.conf import Settings as thumbnail_settings
+
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS

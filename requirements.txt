@@ -16,7 +16,6 @@ django-haystack==2.4.0
 django-image-cropping==1.0.2
 django-libsass==0.4
 django-object-tools==1.1.0
-django-postgrespool==0.3.0
 django-registration-redux==1.2
 django-templatetag-sugar==1.0
 easy-thumbnails==2.2
