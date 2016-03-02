@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals
 from operator import attrgetter
+
+from django.contrib.contenttypes import generic
 from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
@@ -9,6 +11,7 @@ from django.utils.encoding import force_text
 from django.utils.text import Truncator
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django_comments.models import Comment
 from django_extensions.db.fields.json import JSONField
 
 
@@ -16,6 +19,35 @@ BILL_STATUS_CHOICES = (
     ('draft', _('Draft')),
     ('published', _('Published')),
     ('closed', _('Closed'))
+)
+
+BILL_THEMES_CHOICES = (
+    ('documento', _('Others')),
+    ('adm-publica', _('Public Administration')),
+    ('agropecuaria', _('Farming')),
+    ('assistencia-social', _('Social Assistance')),
+    ('cidades', _('Cities')),
+    ('ciencia', _('Science')),
+    ('comunicacao', _('Communication')),
+    ('consumidor', _('Consumer')),
+    ('cultura', _('Culture')),
+    ('direito-e-justica', _('Law and Justice')),
+    ('direitos-humanos', _('Human Rights')),
+    ('economia', _('Economy')),
+    ('educacao', _('Education')),
+    ('esportes', _('Sports')),
+    ('familia', _('Family')),
+    ('industria', _('Industry')),
+    ('institucional', _('Institutional')),
+    ('meio-ambiente', _('Environment')),
+    ('politica', _('Policy')),
+    ('previdencia', _('Foresight')),
+    ('relacoes-exteriores', _('Foreign Affairs')),
+    ('saude', _('Health')),
+    ('seguranca', _('Security')),
+    ('trabalho', _('Work')),
+    ('transporte-e-transito', _('Transportation and Transit')),
+    ('turismo', _('Tourism'))
 )
 
 
@@ -52,7 +84,7 @@ class Bill(TimestampedMixin):
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'))
     status = models.CharField(_('status'), max_length=20, choices=BILL_STATUS_CHOICES, default='1')
-
+    theme = models.CharField(_('theme'), max_length=255, choices=BILL_THEMES_CHOICES, default='others')
     editors = models.ManyToManyField(
         'auth.Group', verbose_name=_('editors'), blank=True,
         help_text=_('Any users in any of these groups will '
@@ -98,6 +130,8 @@ class BillSegment(TimestampedMixin):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('author'), null=True)
     original = models.BooleanField(_('original'), default=True)
     content = models.TextField(_('content'))
+    comments = generic.GenericRelation(Comment, object_id_field="object_pk")
+    votes = generic.GenericRelation('core.UpDownVote', object_id_field="object_id")
 
     class Meta:
         ordering = ('order',)
@@ -105,8 +139,11 @@ class BillSegment(TimestampedMixin):
         verbose_name_plural = _('segments')
 
     def __unicode__(self):
-        return '{kind} {number}'.format(
-            kind=self.type, number=self.number)
+        if self.number:
+            return '{kind} {number}'.format(
+                kind=self.type, number=self.number)
+        else:
+            return self.type.name
 
     def is_editable(self):
         return self.type.editable is True
@@ -193,4 +230,3 @@ class Proposition(models.Model):
 
     def __unicode__(self):
         return self.number
-
