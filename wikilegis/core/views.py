@@ -6,8 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Sum
-from django.db.models.functions import Lower
+from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404, render_to_response
 from django.template import RequestContext
@@ -15,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.utils.text import capfirst
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.views.generic import DetailView, CreateView
+
 from .forms import CitizenAmendmentCreationForm, AddProposalForm
 from .models import Bill, BillSegment, UpDownVote
 from wikilegis.comments2.utils import create_comment
@@ -205,7 +205,6 @@ class CreateProposal(CreateView):
         return form_kwargs
 
     def form_valid(self, form):
-        import ipdb;ipdb.set_trace()
         amendment = BillSegment()
         amendment.bill_id = self.kwargs['bill_id']
         amendment.type = form.cleaned_data['type']

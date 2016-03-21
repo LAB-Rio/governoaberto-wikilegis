@@ -277,6 +277,8 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 # django-debug-toolbar: http://django-debug-toolbar.readthedocs.org/
+LIBSASS_SOURCEMAPS = DEBUG
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public', 'media'))
