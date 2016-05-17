@@ -36,7 +36,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(lambda x: x.strip().strip(',').strip()), default='127.0.0.1')
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -69,7 +68,17 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'easy_thumbnails',
     'image_cropping',
+    'rest_framework',
 )
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+         'rest_framework.permissions.AllowAny',
+    ],
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
