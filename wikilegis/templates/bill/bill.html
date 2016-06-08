@@ -1,4 +1,14 @@
-{% extends "base_with_sidebar.html" %} {% load static humanize i18n %} {% load video from embed_video_tags %} {% load cropping %} {% load proposals %} {% load subscribers %} {% block content2 %} {% comment %}TODO Remove these funny scroll sheningans{% endcomment %}
+{% extends "base_with_sidebar.html" %} {% load static humanize i18n %} {% load video from embed_video_tags %} {% load cropping %} {% load proposals %} {% load subscribers %}
+
+{% block extrameta %}
+<meta property="og:type"   content="article" />
+<meta property="og:title" content="{{ bill.epigraph }}" />
+<meta property="og:description" content="{{ bill.description }}" />
+<meta property="og:image:url"  content="http://wikilegis.labhackercd.net/static/img/logo-full.png" /> 
+<meta property="og:image:type" content="image/png" />
+{% endblock %}
+
+{% block content2 %} {% comment %}TODO Remove these funny scroll sheningans{% endcomment %}
 <style>
     select {display:block;}
 </style>
@@ -98,7 +108,15 @@
       
         <div class="pl-info">
           {% if bill.proposition_set.all.0.situation %}
-            <span class="item"><span class="pl-subheading">{% trans "Bill status:" %}</span> <span class="pl-status">{{ bill.proposition_set.all.0.situation }}</span></span>
+            <span class="item">
+              <span class="pl-subheading">{% trans "Bill status:" %}</span>
+              <span class="pl-status">
+                <a target="_blank" href="http://www.camara.gov.br/proposicoesWeb/fichadetramitacao?idProposicao={{ bill.proposition_set.all.0.id_proposition }}">
+                  {{ bill.proposition_set.all.0.situation }}
+                </a>
+              </span>
+            </span>
+
           {% endif %}
           <span class="item"><span class="pl-subheading">{% trans "Attendees:" %}</span> <span class="users-count">{{ bill|attendees_count }}</span></span> 
           <span class="item"><span class="pl-subheading">{% trans "Proposals:" %}</span> <span class="prop-count">{{ bill|proposals_count }}</span></span>
