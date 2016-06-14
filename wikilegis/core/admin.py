@@ -58,6 +58,7 @@ class BillSegmentInline(SortableInlineAdminMixin, admin.TabularInline):
     extra = 1
     exclude = ['original', 'replaced', 'author']
     per_page = 20
+    raw_id_fields = ("parent",)
 
     def get_formset(self, request, obj=None, **kwargs):
         formset_class = super(BillSegmentInline, self).get_formset(request, obj, **kwargs)
@@ -152,7 +153,7 @@ class BillAdmin(admin.ModelAdmin):
     actions = [propositions_update]
     form = BillAdminForm
     fieldsets = [
-        (None, {'fields': ['title', 'epigraph', 'description', 'theme', 'status',  'editors']}),
+        (None, {'fields': ['title', 'epigraph', 'description', 'theme', 'status', 'reporting_member', 'editors']}),
         (_('Legislative proposal'), {'fields': ['type', 'number', 'year'],
                                      'description': _("This data will be used to assign the project to a legislative "
                                                       "proposal pending before the House of Representatives. You only "

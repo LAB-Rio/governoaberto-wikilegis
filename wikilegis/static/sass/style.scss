@@ -704,7 +704,7 @@ strong {
 
         .heading-title {
             display: block;
-            margin-top: 2rem;
+            margin-top: 0.5rem;
         }
     }
 
@@ -713,9 +713,10 @@ strong {
         text-align: center;
         width: 100%;
         margin-top: 1.2rem;
-        margin-bottom: 1.2rem;
+        margin-bottom: 0.75rem;
         text-transform: uppercase;
         font-weight: 100;
+        font-size: 1.5rem;
     }
 
 }
@@ -1206,7 +1207,7 @@ blockquote {
 .avatr {
     padding-right: 15px;
     float: left;
-    margin-top: -5px;
+    margin-top: 2px;
     .pic {
         width: 50px;
         height: 50px;
@@ -1437,8 +1438,25 @@ $opacity: .4;
             font-weight: bold;
             font-size: 1.1em;
         }
+        .user-type {
+            position: relative;
+            color: #767873;
+            padding-left: 10px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                margin: auto;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 5px;
+                height: 80%;
+                background-color: #29d17a;
+            }
+        }
         .date {
-            margin-top: 0px;
+            margin: 0;
             opacity: .4;
         }
     }
