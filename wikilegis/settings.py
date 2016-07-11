@@ -307,12 +307,7 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'public', 'media'))
 
-<<<<<<< HEAD
-## Debug toolbar
-
-=======
 # Debug toolbar
->>>>>>> origin/master
 STATIC_IPS = ('127.0.0.1', '::1', )
 
 

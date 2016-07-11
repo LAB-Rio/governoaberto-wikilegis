@@ -40,12 +40,5 @@ whitenoise==2.0.3
 djangorestframework==3.3.3
 Markdown==2.6.6
 django-filter==0.13.0
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-roman==2.0.0
->>>>>>> origin/master
-=======
 roman==2.0.0
 django-cors-headers==1.1.0
->>>>>>> origin/master
