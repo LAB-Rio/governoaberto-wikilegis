@@ -1,4 +1,5 @@
 from django_comments.models import Comment
+from django.conf import settings
 from rest_framework import serializers
 
 from wikilegis.auth2.models import User
@@ -15,6 +16,21 @@ class CommentsSerializer(serializers.ModelSerializer):
     content_type = serializers.SerializerMethodField('get_content_type_name')
     user = CommentsUserSerializer()
 
+    def __init__(self, *args, **kwargs):
+        super(CommentsSerializer, self).__init__(*args, **kwargs)
+
+        try:
+            request = kwargs.get('context').get('request')
+            api_key = request.GET.get('api_key', None)
+
+            if api_key and api_key == settings.API_KEY:
+                self.fields['user'] = UserSerializer()
+            else:
+                self.fields['user'] = CommentsUserSerializer()
+        except AttributeError:
+            # When django initializes kwarg is None
+            pass
+
     def get_content_type_name(self, obj):
         return obj.content_type.name
 
@@ -22,6 +38,12 @@ class CommentsSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'user', 'submit_date',
                   'content_type', 'object_pk', 'comment')
+
+
+class CommentsSerializerForPost(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('object_pk', 'comment')
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -45,7 +67,16 @@ class SegmentSerializer(serializers.ModelSerializer):
         model = BillSegment
         fields = ('id', 'order', 'bill', 'original', 'replaced', 'parent',
                   'type', 'number', 'content', 'author', 'comments', 'votes',
-		  'created', 'modified')
+                  'created', 'modified')
+
+
+class SegmentSerializerForPost(serializers.ModelSerializer):
+    bill = serializers.UUIDField()
+    replaced = serializers.UUIDField()
+
+    class Meta:
+        model = BillSegment
+        fields = ('bill', 'replaced', 'content')
 
 
 class BillDetailSerializer(serializers.ModelSerializer):
@@ -74,3 +105,15 @@ class TypeSegmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TypeSegment
         fields = ('id', 'name')
+
+
+class UpDownVoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UpDownVote
+        fields = ('user', 'content_type', 'object_id', 'vote')
+
+
+class UpDownVoteSerializerForPost(serializers.ModelSerializer):
+    class Meta:
+        model = UpDownVote
+        fields = ('object_id', 'vote')
