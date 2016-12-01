@@ -4,7 +4,7 @@
 <meta property="og:type"   content="article" />
 <meta property="og:title" content="{{ bill.epigraph }}" />
 <meta property="og:description" content="{{ bill.description }}" />
-<meta property="og:image:url"  content="http://wikilegis.labhackercd.net/static/img/share/{{ bill.theme }}.jpg" /> 
+<meta property="og:image:url"  content="http://wikilegis.labhackercd.net/static/img/share/{{ bill.theme }}.jpg" />
 <meta property="og:image:type" content="image/png" />
 <meta name="twitter:card" content="photo" />
 <meta name="twitter:site" content="@edemocracia" />
@@ -18,7 +18,7 @@
     select {display:block;}
 </style>
 <div class="container">
-  
+
   <div class="row valign-wrapper">
     <div class="col s2 l1 valign">
       <div class="circle {% if bill.status = 'closed' %}border-red{% endif %} valign-wrapper">
@@ -36,7 +36,7 @@
   </div>
 
   <div class="row">
-    
+
     <div class="col s12 l3 push-l9">
       <div class="pl-full pl-description">
 
@@ -64,7 +64,7 @@
                       <input class="with-gap" value="weekly" name="periodicity" type="radio" id="periodicity_weekly" checked>
                       <label for="periodicity_weekly">{% trans "Weekly" %}</label>
                     </div>
-                    
+
                     <div>
                       <input class="with-gap" value="daily" name="periodicity" type="radio" id="periodicity_daily">
                       <label for="periodicity_daily">{% trans "Daily" %}</label>
@@ -72,7 +72,7 @@
                   </div>
 
                   <button class="subscribe-submit btn-flat waves-effect waves-light" type="submit">{% trans "Subscribe" %}</button>
-                </div>           
+                </div>
               </li>
             </ul>
           {% endif %}
@@ -91,12 +91,14 @@
             </span>
 
           {% endif %}
-          <span class="item"><span class="pl-subheading">{% trans "Attendees:" %}</span> <span class="users-count">{{ attendees }}</span></span> 
-          <span class="item"><span class="pl-subheading">{% trans "Proposals:" %}</span> <span class="prop-count">{{ proposals }}</span></span>
-          {% if bill.closing_date %}  
+          <span class="item"><span class="pl-subheading">{% trans "Attendees:" %}</span> <span class="users-count">{{ attendees }}</span></span>
+          <span class="item filter-proposals"><span class="pl-subheading">{% trans "Proposals:" %}</span> <span class="prop-count" id="filter-proposal">{{ proposals }}</span></span>
+          {% if bill.closing_date %}
           <span class="item"><span class="pl-subheading">{% trans "Closing date:" %}</span> <span class="prop-count">{{ bill.closing_date|date:'d/m/Y' }}</span></span>
           {% endif %}
         </div>
+
+        <div class="report"><a class="report-link" href="{% url 'bill_report' bill.id %}">{% trans "Access Report" %}</a></div>
 
         <div class="row">
           {% if proposition %}
@@ -146,18 +148,29 @@
           {% endif %}
         </div>
 
+        <span class="votes-title">{% trans "Do you support this bill?" %}</span>
+        <div class="votes">
+          {% with bill as content_object %}
+              {% if bill.status = 'published' %}
+                  {% include "_vote_buttons.html" %}
+              {% else %}
+                  {% include "_vote_buttons_read_only.html" %}
+              {% endif%}
+          {% endwith %}
+        </div>
+
         <div class="divider"></div>
-            
+
         {% for item in videos %}
           <div class="pl-about video-descripition">
             {% video item.url %}
           </div>
           {% if not forloop.last %}
             <hr />
-          {% endif %} 
+          {% endif %}
         {% endfor %}
-        
-        <ul class="subscribe-button collapsible">
+
+<!--        <ul class="subscribe-button collapsible">
           <li>
             <div class="subscribe-header collapsible-header waves-effect waves-light valign-wrapper">
               <i class="material-icons valign">http</i>
@@ -165,18 +178,15 @@
             </div>
             <div class="subscribe-body collapsible-body">
 
-              <p>{% trans "Copy and paste this code in your website." %}</p>
+              <p>{% trans "You may have this project featured in your own website by pasting the following code in your own source code." %}</p>
 
               <div class="subscribe-options embed-code">
-                <code>
-                <div>&lt;div class="wikilegis-widget" bill-id="{{ bill.id }}"&gt;&lt;/div&gt;</div>
-                <div>&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"&gt;&lt;/script&gt;</div>
-                <div>&lt;script src="http://wikilegis.labhackercd.net/static/js/widget.js"&gt;&lt;/script&gt;</div>
-                </code>
+                <textarea readonly style="resize:none; height:170px; width:250px;max-width:100%;">&lt;div class="wikilegis-widget" bill-id="{{ bill.id }}"&gt;&lt;/div&gt;&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"&gt;&lt;/script&gt;&lt;script src="http://{{ domain }}/static/js/widget.js"&gt;&lt;/script&gt;</textarea>
               </div>
-            </div>           
+              <button class="subscribe-submit btn-flat waves-effect waves-light copy-button" data-clipboard-target=".subscribe-options.embed-code textarea" data-text-success="{% trans 'Copied!' %}">{% trans "Copy" %}</button>
+            </div>
           </li>
-        </ul>
+        </ul> -->
 
       </div>
     </div>
@@ -187,23 +197,23 @@
           <!--Article header template, uncomment subs and titles later-->
           <h4 class="amendment-title">{{ bill.epigraph }}</h4>
           <!--<h5 class="sub">{{ segment.content }}</h5>-->
-        
+
           <div class="row">
             <div class="amendment-thead col s6 offset-s4 m5 offset-m1">
-             
+
             </div>
             <div class="syllabus col s12 m6">
               {{ bill.description }}
             </div>
           </div>
-          
-        
+
+
           {% for segment in original_segments %}
             {% include "bill/_bill_segment_item.html" %}
           {% endfor %}
-        </div>  
+        </div>
       </div>
-  
+
     </div>
   </div>
 </div>
@@ -215,11 +225,28 @@
     function verify_newsletter() {
         $.ajax({
             type: "GET",
-            url: "/newsletter/verify/" + {{ bill.id }} + "/" + $('#id_periodicity').val() + "/",
+            url: '{% url 'verify_newsletter' bill.id %}' + '?periodicity='+ $('#id_periodicity').val(),
             error: function (data) {
                 alert("An error occurred, please try again."); // TODO: How do we internationalize strings inside JS?
             }
         });
     }
+    $('.filter-proposals').click(function() {
+      $('.list-amendment').toggleClass('hide-empty');
+    });
+</script>
+
+<script>
+  var clipboard = new Clipboard('.copy-button');
+
+  clipboard.on('success', function() {
+    var copyButtonContent = $('.copy-button').text();
+
+    $('.copy-button').text($('.copy-button').data('text-success'));
+
+    setTimeout(function(){
+      $('.copy-button').text(copyButtonContent);
+    }, 3000);
+  });
 </script>
 {% endblock %}

@@ -7,6 +7,9 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 from django.db.models import permalink
 from image_cropping import ImageCropField, ImageRatioField
 from django import forms
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class UserManager(BaseUserManager):
@@ -109,12 +112,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.first_name
 
+    def get_email_name(self):
+        return self.email.split('@')[0]
+
     def get_display_name(self):
-        return self.get_full_name() or self.email
+        return self.get_full_name() or self.get_email_name()
 
     @permalink
     def get_absolute_url(self):
         return 'users_profile', [self.pk], {}
+
+
+@receiver(post_save, sender=User)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
 
 
 class Congressman(models.Model):

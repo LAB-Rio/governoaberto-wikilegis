@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-02 13:58-0300\n"
+"POT-Creation-Date: 2016-11-17 20:36-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,27 +112,27 @@ msgstr ""
 "El id de cada parlamentario puede ser encontrado en los parámetros de la url "
 "en el perfil del parlamentario en el sitio http://www2.camara.leg.br/"
 
-#: auth2/models.py:121 core/models.py:172 notification/models.py:30
+#: auth2/models.py:124 core/models.py:172 notification/models.py:30
 msgid "user"
 msgstr "usuario"
 
-#: auth2/models.py:122
+#: auth2/models.py:125
 msgid "uf"
 msgstr "uf"
 
-#: auth2/models.py:123
+#: auth2/models.py:126
 msgid "party"
 msgstr "partido"
 
-#: auth2/models.py:124
+#: auth2/models.py:127
 msgid "parliamentary name"
 msgstr "nombre del parlamentario"
 
-#: auth2/models.py:127
+#: auth2/models.py:130
 msgid "congressman"
 msgstr "parlamentario"
 
-#: auth2/models.py:128
+#: auth2/models.py:131
 msgid "congressmen"
 msgstr "parlamentarios"
 
@@ -207,7 +207,7 @@ msgstr "Este campo puede ser usado para importar un archivo txt"
 msgid "Situation"
 msgstr "Situación"
 
-#: core/admin.py:220
+#: core/admin.py:220 templates/comments2/_comment_list.html:29
 msgid "Show"
 msgstr "Mostrar"
 
@@ -592,24 +592,24 @@ msgstr "Ninguno"
 msgid "Sole paragraph"
 msgstr "Párrafo único"
 
-#: core/views.py:28
+#: core/views.py:30
 msgid "Order by"
 msgstr "Ordenar por"
 
-#: core/views.py:34
+#: core/views.py:36
 msgid "Hot"
 msgstr "Relevante"
 
-#: core/views.py:35
+#: core/views.py:37
 msgid "Date"
 msgstr "Recientes"
 
-#: core/views.py:160
+#: core/views.py:166
 #, python-brace-format
 msgid "Cannot submit proposals to {object}."
 msgstr "No se pueden enviar propuestas a {object}"
 
-#: core/views.py:190 core/views.py:231
+#: core/views.py:196 core/views.py:237
 #, python-brace-format
 msgid "{object_type} submitted."
 msgstr "{object_type} enviado"
@@ -650,11 +650,11 @@ msgstr "Boletín"
 msgid "Newsletters"
 msgstr "Boletines"
 
-#: settings.py:223
+#: settings.py:232
 msgid "Google"
 msgstr ""
 
-#: settings.py:227
+#: settings.py:236
 msgid "Facebook"
 msgstr ""
 
@@ -695,7 +695,7 @@ msgstr ""
 "participar en las discusiones de los proyectos, puedes ayudarnos a mejorar "
 "la herramienta."
 
-#: templates/about.html:22
+#: templates/about.html:22 templates/footer.html:10
 msgid ""
 "Visit us on Trello, Github and in our page to propose new features or to "
 "report bugs. If you have programming skills, you can also collaborate to the "
@@ -705,12 +705,11 @@ msgstr ""
 "funcionalidades o para reportar errores. Si tienes habilidades de "
 "programación, también puedes colaborar con el desarrollo de Wikilegis."
 
-#: templates/about.html:33
+#: templates/about.html:33 templates/footer.html:7
 msgid "terms of use"
 msgstr ""
 
-#: templates/about.html:36
-#: templates/registration/registration_complete.html:14
+#: templates/about.html:36 templates/registration/registration_complete.html:14
 msgid "Back to main page"
 msgstr "Volver a la página principal"
 
@@ -753,7 +752,7 @@ msgstr "Tu perfil"
 msgid "Update my profile"
 msgstr "Actualizar mi perfil"
 
-#: templates/bill/_base.html:19 templates/bill/bill.html:33
+#: templates/bill/_base.html:18 templates/bill/bill.html:33
 #, fuzzy
 #| msgid "Participate"
 msgid "Participations Closed"
@@ -814,36 +813,67 @@ msgstr "Propuestas:"
 msgid "Closing date:"
 msgstr "Fecha límite"
 
-#: templates/bill/bill.html:117
+#: templates/bill/bill.html:102
+#, fuzzy
+#| msgid "Report"
+msgid "Access Report"
+msgstr "Reporte"
+
+#: templates/bill/bill.html:119
 msgid "AUTHOR"
 msgstr "AUTOR"
 
 # TODO check if in the chilean parliament exists this role
-#: templates/bill/bill.html:138
+#: templates/bill/bill.html:140
 msgid "RAPPORTEUR"
 msgstr "PARLAMENTARIO INFORMANTE"
 
-#: templates/bill/bill.html:165
+#: templates/bill/bill.html:152
+msgid "Do you support this bill?"
+msgstr ""
+
+#: templates/bill/bill.html:178
 msgid "Embedding Code"
 msgstr ""
 
-#: templates/bill/bill.html:169
-msgid "Copy and paste this code in your website."
+#: templates/bill/bill.html:182
+msgid ""
+"You may have this project featured in your own website by pasting the "
+"following code in your own source code."
 msgstr ""
 
-#: templates/bill/bill_segment.html:28 templates/bill/proposal.html:24
+#: templates/bill/bill.html:187
+msgid "Copied!"
+msgstr ""
+
+#: templates/bill/bill.html:187
+msgid "Copy"
+msgstr ""
+
+#: templates/bill/bill_segment.html:29 templates/bill/proposal.html:24
 msgid "Original text"
 msgstr "Texto original"
 
-#: templates/bill/bill_segment.html:149
-msgid "Submitted proposals"
-msgstr "Propuestas enviadas"
+#: templates/bill/bill_segment.html:101 templates/bill/bill_segment.html:200
+#, fuzzy
+#| msgid "citizen amendments"
+msgid "Suggest new amendment!"
+msgstr "propuestas ciudadanas"
 
-#: templates/bill/bill_segment.html:215
-msgid "Make a proposal!"
-msgstr "¡Sugiere una propuesta!"
+#: templates/bill/bill_segment.html:134
+msgid "Proposed by the society"
+msgstr ""
 
-#: templates/bill/bill_segment.html:222
+#: templates/bill/bill_segment.html:166
+#: templates/comments2/_comment_list.html:7
+msgid "By"
+msgstr ""
+
+#: templates/bill/bill_segment.html:181
+msgid "Comments for this suggestion"
+msgstr ""
+
+#: templates/bill/bill_segment.html:207
 #, fuzzy
 #| msgid "Participate"
 msgid "Participations closed"
@@ -858,17 +888,62 @@ msgstr "Enviar propuesta"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: templates/comments2/_comment_form.html:24
+#: templates/comments2/_comment_form.html:17
+#, fuzzy
+#| msgid "citizen amendment"
+msgid "Write a comment"
+msgstr "propuesta ciudadana"
+
+#: templates/comments2/_comment_form.html:31
 msgid "Post"
 msgstr "Enviar"
 
-#: templates/comments2/_comment_form.html:25
-msgid "Preview"
-msgstr "Previsualizar"
+#: templates/comments2/_comment_list.html:16
+msgid "No comments made."
+msgstr ""
+
+#: templates/comments2/_comment_list.html:18
+msgid "No comments yet. Be the first to comment!"
+msgstr ""
+
+#: templates/comments2/_comment_list.html:30
+#, fuzzy
+#| msgid "citizen amendment"
+msgid "more comments"
+msgstr "propuesta ciudadana"
+
+#: templates/comments2/_comment_list.html:31
+msgid "Expand to show all comments on this post"
+msgstr ""
+
+#: templates/comments2/_comment_list.html:32
+msgid "Read more"
+msgstr ""
 
 #: templates/export/export_form.html:10
 msgid "Download"
 msgstr "Descargar"
+
+#: templates/footer.html:7
+#, fuzzy
+#| msgid ""
+#| "Wikilegis is a project developed by the Brazilian Chamber of Deputies’ "
+#| "Hacker Lab, designed to enable citizens to suggest modifications to the "
+#| "wording of Bills. It is an open source project, developed under license "
+#| "CC BY 4.0. Besides participating in discussions of the bill, you can help "
+#| "us to improve our tool."
+msgid ""
+"Wikilegis is a project developed by the Brazilian Chamber of Deputies’ "
+"Hacker Lab, designed to enable citizens to suggest modifications to the "
+"wording of Bills or other types of legislation. It is an open source "
+"project, developed under license CC BY 4.0."
+msgstr ""
+"Wikilegis es un proyecto desarrollado por el Laboratorio Hacker de la Cámara "
+"de Diputados del Parlamento de Brasil, diseñado para habilitar a los "
+"ciudadanos a que sugieran modificaciones al texto de los Proyectos de Ley. "
+"Es un proyecto open source, desarrollado bajo licencia CC BY 4.0. Además de "
+"participar en las discusiones de los proyectos, puedes ayudarnos a mejorar "
+"la herramienta."
 
 #: templates/index.html:11
 msgid "Your legislative editing tool"
@@ -1061,11 +1136,17 @@ msgstr ""
 msgid "Resend"
 msgstr "Reenviar"
 
+#~ msgid "Make a proposal!"
+#~ msgstr "¡Sugiere una propuesta!"
+
+#~ msgid "Submitted proposals"
+#~ msgstr "Propuestas enviadas"
+
+#~ msgid "on"
+#~ msgstr "el"
+
+#~ msgid "Preview"
+#~ msgstr "Previsualizar"
+
 #~ msgid "bill segment"
 #~ msgstr "elemento del proyecto"
-
-#~ msgid "citizen amendment"
-#~ msgstr "propuesta ciudadana"
-
-#~ msgid "citizen amendments"
-#~ msgstr "propuestas ciudadanas"

@@ -16,7 +16,7 @@ function linebreaks(text) {
     var linePattern = /(?:\r\n|\r|\n)/g;
     var paragraphPattern = /(?:\r\n|\r|\n){2}/g;
     return _.map(text.split(paragraphPattern), function (p) {
-        return '<p>' + p.replace(linePattern, '<br />') + '</p>';
+        return p.replace(linePattern, '<br />');
     }).join('\n\n');
 }
 
@@ -27,7 +27,7 @@ function changesToMarkup(changes) {
 
 jQuery(document).ready(function ($) {
 
-    //navbar	
+    //navbar
 
     var is_root = location.pathname == "/";
 
@@ -59,25 +59,25 @@ jQuery(document).ready(function ($) {
         if (!is_opened) {
             open();
         } else {
-            close();             
+            close();
         }
-        
+
         $('#overlay').click(function() {
-            close(); 
+            close();
         });
-        
+
     });
-    
+
     function open() {
         $(document.body).append('<div id="overlay"></div>');
         $('.wiki-navbar').addClass('opened');
         $('.wiki-navbar').css('background-color', '#324545');
-        $('.wiki-navbar').css('box-shadow', '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)');                   
+        $('.wiki-navbar').css('box-shadow', '0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)');
         $('#menu-button').html('close');
         $('.wiki-navbar').css('height', 'auto');
         $('.opened-menu').removeClass('hide');
     }
-    
+
     function close() {
         $('#overlay').remove();
         $('.wiki-navbar').removeClass('opened');
@@ -87,8 +87,8 @@ jQuery(document).ready(function ($) {
         $('.wiki-navbar').css('height', '');
         $('.opened-menu').addClass('hide');
     }
-    
-    
+
+
 
     //See projects
 
@@ -98,36 +98,36 @@ jQuery(document).ready(function ($) {
         }, 1000, 'easeOutCirc');
     });
 
-    
+
     //Show more segments
-    
+
     $('.show-more-segments').click(function() {
         $(this).parent().find('.bill-link').nextAll('.bill-link').show();
         $(this).remove();
     });
-    
-    
+
+
     //Add segment item
-    
+
     $('.asi-link').click(function() {
         $(this).hide();
         $('.add-segment-form').removeClass('hide');
         $('.segment-content').focus();
     });
-    
+
     var cancel = $('.add-segment-form').find('.cancel');
-    
+
     cancel.click(function() {
         $('.add-segment-form').addClass('hide');
         $('.asi-link').show();
     });
-    
+
     //View comments
-    
+
     $('.view-comments').click(function(e) {
         e.preventDefault();
         //$(this).hide();
-        console.log($(this).closest('.main').find('.holder').removeClass('hide'));
+        console.log($(this).closest('.main').find('.holder').toggleClass('hide'));
         /*$('.segment-content').focus();*/
     });
 
@@ -141,7 +141,7 @@ jQuery(document).ready(function ($) {
                 $(commentsList[i]).hide();
             }
 
-            $(commentsList[qtd_to_show - 1]).after('<a class="show-more" href="#" title="expand to show all comments on this post" onclick>show <b>' + String(comments.length - qtd_to_show) + '</b> more comments</a>')
+            $(commentsList[qtd_to_show - 1]).after('<span class="show-more" role="button" title="'+ moreCommentsString3 +'" onclick>'+ moreCommentsString1 +'<b> ' + String(comments.length - qtd_to_show) + ' </b>'+ moreCommentsString2 +'</span>')
         }
 
         function showMoreComments(commentsList) {
@@ -167,7 +167,39 @@ jQuery(document).ready(function ($) {
         $('form', this).submit();
     });
 
-    // Dropdown Orderer
+    // Dropdown Orderer\
     $(".dropdown-button").dropdown();
 
+
+    // Read more button
+
+    // Configure/customize these variables.
+    var showChar = 190;  // How many characters are shown by default
+    var ellipsisText = "... ";
+
+    $('.collapsible-comments-comment').each(function() {
+        var content = $(this).html();
+
+        if(content.length > showChar) {
+
+            $(this).addClass('more');
+
+            var c = content.substr(0, showChar);
+            var h = content.substr(showChar, content.length - showChar);
+
+            var html = c + '<span class="ellipsis">' + ellipsisText + '</span><span class="full-comment"><span>' + h + '</span><span class="comment-read-more" role="button">' + ' ' + readMoreString + '</span></span>';
+
+            $(this).html(html);
+        }
+
+    });
+
+    $(".comment-read-more").click(function(){
+        $(this).parent().prev().toggle();
+        $(this).prev().toggle();
+        $(this).remove();
+        return false;
+    });
+
 });
+

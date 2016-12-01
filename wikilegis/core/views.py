@@ -14,10 +14,12 @@ from django.utils.decorators import method_decorator
 from django.utils.text import capfirst
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.views.generic import DetailView, CreateView
+from django.contrib.sites.models import Site
 
 from .forms import CitizenAmendmentCreationForm, AddProposalForm
 from .models import Bill, BillSegment, UpDownVote, Proposition
 from django_comments.models import Comment
+from django.conf import settings
 from wikilegis.auth2.models import Congressman
 from wikilegis.comments2.utils import create_comment
 from wikilegis.core.genericdata import BillVideo, BillAuthorData
@@ -72,15 +74,19 @@ class BillDetailView(DetailView):
         metadata = self.object.metadata.all()
         videos = filter(lambda x: x.type == 'VIDEO', metadata)
         segment_ctype = ContentType.objects.get_for_model(BillSegment)
+        bill_ctype = ContentType.objects.get_for_model(Bill)
         segments_id = set(self.object.segments.values_list('id', flat=True))
         votes_ids = UpDownVote.objects.filter(content_type=segment_ctype,
                                               object_id__in=segments_id).values_list('user__id', flat=True)
+        votes_bill_ids = UpDownVote.objects.filter(content_type=bill_ctype,
+                                                   object_id=self.object.id).values_list('user__id', flat=True)
         comment_ids = Comment.objects.filter(object_pk__in=segments_id,
                                              content_type=segment_ctype).values_list('user__id', flat=True)
         proposals_ids = self.object.segments.filter(original=False).values_list('author__id', flat=True)
-        context['attendees'] = len(set(list(votes_ids) + list(comment_ids) + list(proposals_ids)))
+        context['attendees'] = len(set(list(votes_bill_ids) + list(votes_ids) + list(comment_ids) + list(proposals_ids)))
         context['proposals'] = self.object.segments.filter(original=False).count()
         context['videos'] = map(BillVideo, videos)
+        context['domain'] = Site.objects.get_current().domain + settings.FORCE_SCRIPT_NAME
         try:
             context['congressman'] = Congressman.objects.filter(user_id=self.object.reporting_member.id).latest('id')
         except:
@@ -156,9 +162,10 @@ def create_amendment(request, bill_id, segment_id):
     segment = _get_segment_or_404(bill_id, segment_id)
 
     if not segment.is_editable():
-        messages.error(request, ugettext(
-            "Cannot submit proposals to {object}.").format(object=segment))
-        return redirect_to_segment_at_bill_page(segment)
+        return redirect('show_bill', pk=bill_id)
+
+    if not segment.bill.status == 'published':
+        return redirect('show_segment', bill_id=bill_id, segment_id=segment_id)
 
     form_factory = CitizenAmendmentCreationForm
     form_initial_data = {
@@ -244,16 +251,22 @@ class BillReport(DetailView):
     def get_context_data(self, **kwargs):
         context = super(BillReport, self).get_context_data(**kwargs)
         segment_ctype = ContentType.objects.get_for_model(BillSegment)
+        bill_ctype = ContentType.objects.get_for_model(Bill)
         segments_id = set(self.object.segments.values_list('id', flat=True))
         votes = UpDownVote.objects.filter(content_type=segment_ctype, object_id__in=segments_id)
+        votes_bill_ids = UpDownVote.objects.filter(content_type=bill_ctype,
+                                                   object_id=self.object.id).values_list('user__id', flat=True)
         comments = Comment.objects.filter(object_pk__in=segments_id, content_type=segment_ctype)
         proposals = self.object.segments.filter(original=False)
-        featured_segments = set(list(votes.values_list('object_id', flat=True)) +
-                                list(comments.values_list('object_pk', flat=True)) +
-                                list(proposals.values_list('parent_id', flat=True)))
+        featured_segments = (list(votes.values_list('object_id', flat=True)) +
+                             list(comments.values_list('object_pk', flat=True)) +
+                             list(proposals.values_list('replaced_id', flat=True)))
+        featured_segments = set(map(int, featured_segments))
         context['votes'] = votes.count()
+        context['bill_votes'] = votes_bill_ids.count()
         context['comments'] = comments.count()
-        context['attendees'] = len(set(list(votes.values_list('user__id', flat=True)) +
+        context['attendees'] = len(set(list(votes_bill_ids) +
+                                       list(votes.values_list('user__id', flat=True)) +
                                        list(comments.values_list('user__id', flat=True)) +
                                        list(proposals.values_list('author__id', flat=True))))
         context['proposals'] = proposals.count()

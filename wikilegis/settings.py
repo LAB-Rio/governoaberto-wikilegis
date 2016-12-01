@@ -25,6 +25,8 @@ from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+FORCE_SCRIPT_NAME = config('FORCE_SCRIPT_NAME', default="")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -71,7 +73,10 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'django_filters',
+    'crispy_forms',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -87,6 +92,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+    ),
     'PAGE_SIZE': 10
 }
 
@@ -102,6 +110,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'wikilegis.core.middlewares.ForceLangMiddleware',
 )
 
 ROOT_URLCONF = 'wikilegis.urls'
@@ -148,8 +157,9 @@ LOCALE_PATHS = [
     os.path.join(HERE, 'locale'),
 ]
 
-
 # Authentication and user management
+
+LOGIN_URL = config('LOGIN_URL', default='/accounts/login/')
 
 AUTH_USER_MODEL = 'auth2.User'
 
@@ -352,3 +362,12 @@ THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
+<<<<<<< HEAD
+=======
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=587)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=True)
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='')
+>>>>>>> 8861a311a86a43b82268be00206f33371d1f54b7
