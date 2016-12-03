@@ -51,15 +51,22 @@ class BillOrderer(SimpleOrderer):
 
 
 def index(request):
+    allowed_bills = Bill.objects.none()
     if request.GET.get('status') == 'closed':
-        bills = Bill.objects.filter(status='closed')
+        bills = Bill.objects.filter(status='closed', allowed_users__isnull=True)
+        if request.user.is_authenticated():
+            allowed_bills = request.user.allowed_bills.filter(status='closed')
     else:
-        bills = Bill.objects.filter(status='published')
+        bills = Bill.objects.filter(status='published', allowed_users__isnull=True)
+        if request.user.is_authenticated():
+            allowed_bills = request.user.allowed_bills.filter(status='published')
 
     orderer = BillOrderer(request, dict(request.GET.items()))
     bills = orderer.queryset(request, bills)
+    allowed_bills = orderer.queryset(request, allowed_bills)
 
     return render(request, 'index.html', context=dict(
+        allowed_bills=allowed_bills,
         bills=bills,
         orderer=orderer,
     ))
@@ -99,6 +106,16 @@ class BillDetailView(DetailView):
         context['original_segments'] = self.object.segments.filter(original=True).annotate(
             proposals_count=Count('substitutes'))
         return context
+
+    def get_queryset(self):
+        bill = Bill.objects.get(pk=self.kwargs.get('pk', None))
+        if bill.allowed_users.all():
+            if self.request.user in bill.allowed_users.all():
+                return Bill.objects.filter(pk=self.kwargs.get('pk', None))
+            else:
+                raise Http404()
+        else:
+            return self.model._default_manager.all()
 
 
 def _get_segment_or_404(bill_id, segment_id):

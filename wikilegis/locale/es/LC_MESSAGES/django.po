@@ -946,7 +946,7 @@ msgstr ""
 "la herramienta."
 
 #: templates/index.html:11
-msgid "Your legislative editing tool"
+msgid "Práticas em participação cidadã, inovação pública e visualização de dados."
 msgstr "Tu herramienta de edición legislativa"
 
 #: templates/index.html:12
