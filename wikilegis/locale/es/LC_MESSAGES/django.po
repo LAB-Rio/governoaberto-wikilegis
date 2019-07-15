@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-17 20:36-0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2019-07-15 09:05-3\n"
+"Last-Translator: Enrique Herrera Noya <enrique.herreranoya@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -40,11 +40,11 @@ msgstr "Fechas importantes"
 
 #: auth2/forms.py:26
 msgid "ID not found."
-msgstr ""
+msgstr "ID no encontrado"
 
 #: auth2/forms.py:27
 msgid "No congressman found with this id."
-msgstr ""
+msgstr "Parlamentario no encontrado con este id"
 
 #: auth2/models.py:61
 #, python-brace-format
@@ -426,7 +426,7 @@ msgstr "epígrafe"
 # TODO pending translate into Spanish
 #: core/models.py:87
 msgid "digest"
-msgstr ""
+msgstr "aceptar"
 
 #: core/models.py:88
 msgid "closing date"
@@ -442,7 +442,7 @@ msgstr "tema"
 
 #: core/models.py:92
 msgid "editors"
-msgstr ""
+msgstr "editores"
 
 #: core/models.py:93
 msgid ""
@@ -530,7 +530,7 @@ msgstr "menu"
 
 #: core/models.py:196
 msgid "menu_explanation"
-msgstr ""
+msgstr "menu_explicacion"
 
 #: core/models.py:198
 msgid "id register"
@@ -538,35 +538,35 @@ msgstr "id de registro"
 
 #: core/models.py:199
 msgid "uf author"
-msgstr ""
+msgstr "uf autor"
 
 #: core/models.py:200
 msgid "party author"
-msgstr ""
+msgstr "partido autor"
 
 #: core/models.py:201
 msgid "apresentation date"
-msgstr ""
+msgstr "fecha presentación"
 
 #: core/models.py:202
 msgid "processing_regime"
-msgstr ""
+msgstr "procesaminto_regimen"
 
 #: core/models.py:203
 msgid "last dispatch date"
-msgstr ""
+msgstr "fecha último envío"
 
 #: core/models.py:204
 msgid "last dispatch"
-msgstr ""
+msgstr "último envío"
 
 #: core/models.py:205
 msgid "appraisal"
-msgstr ""
+msgstr "evaluación"
 
 #: core/models.py:206
 msgid "indexing"
-msgstr ""
+msgstr "indexación"
 
 #: core/models.py:207
 msgid "situation"
@@ -652,11 +652,11 @@ msgstr "Boletines"
 
 #: settings.py:232
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: settings.py:236
 msgid "Facebook"
-msgstr ""
+msgstr "FaceBook"
 
 # TODO see the context, could be Sobre o Acerca de esto...
 #: templates/_about_link.html:3
@@ -707,7 +707,7 @@ msgstr ""
 
 #: templates/about.html:33 templates/footer.html:7
 msgid "terms of use"
-msgstr ""
+msgstr "Terminos de uso"
 
 #: templates/about.html:36 templates/registration/registration_complete.html:14
 msgid "Back to main page"
@@ -756,7 +756,7 @@ msgstr "Actualizar mi perfil"
 #, fuzzy
 #| msgid "Participate"
 msgid "Participations Closed"
-msgstr "Participar"
+msgstr "Participación cerrada"
 
 #: templates/bill/_bill_segment_item.html:4
 msgid "TITLE"
@@ -817,7 +817,7 @@ msgstr "Fecha límite"
 #, fuzzy
 #| msgid "Report"
 msgid "Access Report"
-msgstr "Reporte"
+msgstr "Informe de acceso"
 
 #: templates/bill/bill.html:119
 msgid "AUTHOR"
@@ -830,25 +830,27 @@ msgstr "PARLAMENTARIO INFORMANTE"
 
 #: templates/bill/bill.html:152
 msgid "Do you support this bill?"
-msgstr ""
+msgstr "¿Apoya usted este proyecto de ley?"
 
 #: templates/bill/bill.html:178
 msgid "Embedding Code"
-msgstr ""
+msgstr "Código embebido"
 
 #: templates/bill/bill.html:182
 msgid ""
 "You may have this project featured in your own website by pasting the "
 "following code in your own source code."
 msgstr ""
+"Puedes tener este proyecto destacado en tu propio sitio web pegando el"
+"siguiente código en su propio código fuente".
 
 #: templates/bill/bill.html:187
 msgid "Copied!"
-msgstr ""
+msgstr "Copiado!"
 
 #: templates/bill/bill.html:187
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: templates/bill/bill_segment.html:29 templates/bill/proposal.html:24
 msgid "Original text"
@@ -862,22 +864,22 @@ msgstr "propuestas ciudadanas"
 
 #: templates/bill/bill_segment.html:134
 msgid "Proposed by the society"
-msgstr ""
+msgstr "Propuesto por la sociedad."
 
 #: templates/bill/bill_segment.html:166
 #: templates/comments2/_comment_list.html:7
 msgid "By"
-msgstr ""
+msgstr "Por"
 
 #: templates/bill/bill_segment.html:181
 msgid "Comments for this suggestion"
-msgstr ""
+msgstr "Comentarios para esta sugerencia."
 
 #: templates/bill/bill_segment.html:207
 #, fuzzy
 #| msgid "Participate"
 msgid "Participations closed"
-msgstr "Participar"
+msgstr "Participacion cerrada"
 
 #: templates/bill/create_amendment.html:26
 #: templates/bill/create_amendment.html:61
@@ -893,6 +895,7 @@ msgstr "Cancelar"
 #| msgid "citizen amendment"
 msgid "Write a comment"
 msgstr "propuesta ciudadana"
+msgstr "Escribir un comentario"
 
 #: templates/comments2/_comment_form.html:31
 msgid "Post"
@@ -900,25 +903,26 @@ msgstr "Enviar"
 
 #: templates/comments2/_comment_list.html:16
 msgid "No comments made."
-msgstr ""
+msgstr "No se han hecho comentarios."
 
 #: templates/comments2/_comment_list.html:18
 msgid "No comments yet. Be the first to comment!"
-msgstr ""
+msgstr "Sin comentarios aún. ¡Sé el primero en comentar!"
 
 #: templates/comments2/_comment_list.html:30
 #, fuzzy
 #| msgid "citizen amendment"
 msgid "more comments"
 msgstr "propuesta ciudadana"
+msgstr "mas comentarios"
 
 #: templates/comments2/_comment_list.html:31
 msgid "Expand to show all comments on this post"
-msgstr ""
+msgstr "Expandir para mostrar todos los comentarios en esta publicación"
 
 #: templates/comments2/_comment_list.html:32
 msgid "Read more"
-msgstr ""
+msgstr "Leer más"
 
 #: templates/export/export_form.html:10
 msgid "Download"
@@ -947,7 +951,8 @@ msgstr ""
 
 #: templates/index.html:11
 msgid "Práticas em participação cidadã, inovação pública e visualização de dados."
-msgstr "Tu herramienta de edición legislativa"
+# msgstr "Tu herramienta de edición legislativa"
+msgstr "Prácticas de participación ciudadana, innovación pública y visualización de datos."
 
 #: templates/index.html:12
 msgid ""
@@ -999,7 +1004,7 @@ msgstr "Cerrado"
 
 #: templates/index.html:65
 msgid "Created at"
-msgstr "Creados"
+msgstr "Creado en"
 
 #: templates/index.html:70
 msgid "Status"
@@ -1030,6 +1035,7 @@ msgstr "No hay proyectos de ley"
 #| msgid "Situation"
 msgid "registration"
 msgstr "Situación"
+msgid "inscripción"
 
 #: templates/registration/activation_email.html:12
 #, python-format
@@ -1041,6 +1047,13 @@ msgid ""
 "    and your address will be removed from our records.\n"
 "    "
 msgstr ""
+"\n"
+"    Usted (o alguien que pretende ser usted) ha solicitado registrar una cuenta "
+"en\n"
+"    %(site_name)s.  Si no eras tú, ignora este correo electrónico.\n"
+"    y su dirección será eliminada de nuestros registros.\n"
+"    "
+
 
 #: templates/registration/activation_email.html:19
 #, python-format
@@ -1051,6 +1064,11 @@ msgid ""
 "    %(expiration_days)s days:\n"
 "    "
 msgstr ""
+"\n"
+"    Para activar esta cuenta, haga clic en el siguiente enlace dentro de "
+"los siguientes\n"
+"    %(expiration_days)s dias:\n"
+"    "
 
 #: templates/registration/activation_email.html:31
 #, python-format
@@ -1060,6 +1078,10 @@ msgid ""
 "    %(site_name)s Management\n"
 "    "
 msgstr ""
+"\n"
+"    Sinceramente,\n"
+"    %(site_name)s Administración\n"
+"    "
 
 #: templates/registration/login.html:43
 msgid "Activate Account"
