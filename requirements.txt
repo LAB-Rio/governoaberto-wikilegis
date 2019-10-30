@@ -18,7 +18,7 @@ easy-thumbnails==2.2
 futures==3.0.3
 libsass==0.10.1
 oauthlib==1.0.3
-Pillow==3.0.0
+Pillow==6.2.0
 PyJWT==1.4.0
 python-decouple==3.0
 python-openid==2.2.5
