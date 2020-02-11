@@ -1,4 +1,4 @@
-Django==1.8.4
+Django==1.11.28
 django-admin-sortable2==0.5.2
 django-appconf==1.0.1
 django-compressor==2.0
